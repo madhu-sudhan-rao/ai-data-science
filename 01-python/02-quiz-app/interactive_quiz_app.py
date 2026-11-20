@@ -1,7 +1,4 @@
 # Data
-
-
-
 questions = [
     "Which keyword is used to define a function in Python?",
     "Which data type is immutable in Python?",
@@ -26,34 +23,51 @@ correct_answers = [
     "C"
 ]
 
+valid_options = ['A', 'B', 'C', 'D']
 
-print("========== PYTHON QUIZ ==========")
+play = True
 
-total_questions = len(questions)
-correct_answers_count = 0
-wrong_answers_count = 0
+while play:
+    print("========== PYTHON QUIZ ==========")
 
-for i, (question, option, correct_answer) in enumerate(zip(questions, options, correct_answers)):
-    print(f"\nQuestion {i + 1}:")
-    print(f"{question}")
-    for op in option:
-        print(op)
-    entered_answer = input("Enter your answer: ").strip().upper()
+    total_questions = len(questions)
+    correct_answers_count = 0
+    wrong_answers_count = 0
 
-    if entered_answer == correct_answer:
-        print("\nCorrect answer!")
-        correct_answers_count += 1
-    else:
-        wrong_answers_count += 1
-        print("\nWrong answer!")
-        correct_option = next(op for op in option if op.startswith(correct_answer + "."))
-        print(f"Correct answer: {correct_option}")
+    for i, (question, option, correct_answer) in enumerate(zip(questions, options, correct_answers)):
+        print(f"\nQuestion {i + 1}:")
+        print(f"{question}")
+        for op in option:
+            print(op)
+        print("Skip(S)")
+        entered_answer = input("\nEnter your answer: ").strip().upper()
 
-final_score = (correct_answers_count / total_questions) * 100
+        if entered_answer == 'S':
+            print("Skipped")
+            continue
 
-print(f"\nTotal questions: {total_questions}")
-print(f"Correct answers: {correct_answers_count}")
-print(f"Wrong answers: {wrong_answers_count}")
-print(f"Final Score: {final_score}%")
+        while entered_answer not in valid_options:
+            entered_answer = input("Enter your answer: ").strip().upper()
+
+        if entered_answer == correct_answer:
+            print("\nCorrect answer!")
+            correct_answers_count += 1
+        else:
+            wrong_answers_count += 1
+            print("\nWrong answer!")
+            correct_option = next(op for op in option if op.startswith(correct_answer + "."))
+            print(f"Correct answer: {correct_option}")
+
+    final_score = (correct_answers_count / total_questions) * 100
+
+    print(f"\nTotal questions: {total_questions}")
+    print(f"Correct answers: {correct_answers_count}")
+    print(f"Wrong answers: {wrong_answers_count}")
+    print(f"Final Score: {final_score}%")
+
+    play = input("\nWanna play again ? (Y/N): ").strip().upper() in ['Y', 'YES']
+
+
+print("Thank you. Come back again.")
 
 
