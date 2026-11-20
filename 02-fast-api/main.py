@@ -9,18 +9,18 @@ async def root():
     return {"message": "My first FastAPI application"}
 
 
-# Get all posts
-@app.get("/posts")
-async def get_all_posts():
-    url = f"{domain}posts"
+# # Get all posts
+# @app.get("/posts")
+# async def get_all_posts():
+#     url = f"{domain}posts"
 
-    async with httpx.AsyncClient() as client:
-        response = await client.get(url)
+#     async with httpx.AsyncClient() as client:
+#         response = await client.get(url)
 
-        if response.status_code != 200:
-            raise HTTPException(status_code=response.status_code, detail = "External API error")
+#         if response.status_code != 200:
+#             raise HTTPException(status_code=response.status_code, detail = "External API error")
 
-        return response.json()
+#         return response.json()
 
 
 # Get specific post
@@ -34,5 +34,21 @@ async def get_post_by_id(post_id: int):
         if response.status_code != 200:
             raise HTTPException(status_code=response.status_code, detail = "External API error")
 
+
+        return response.json()
+
+
+# Get posts of a user
+@app.get("/posts")
+async def get_posts_by_user(user_id: int | None=None):
+    url = f"{domain}posts"
+
+    query_params = {}
+
+    if user_id is not None:
+        query_params["userId"] = user_id
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url, params=query_params)
 
         return response.json()
