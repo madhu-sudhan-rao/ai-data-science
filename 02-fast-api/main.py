@@ -1,8 +1,16 @@
 from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 import httpx
 
 app = FastAPI()
 domain = "https://jsonplaceholder.typicode.com/"
+
+class Post(BaseModel):
+    title: str
+    body: str
+    userId: int
+    id: int
+
 
 @app.get("/")
 async def root():
@@ -39,7 +47,7 @@ async def get_post_by_id(post_id: int):
 
 
 # Get posts of a user
-@app.get("/posts")
+@app.get("/posts", response_model=list[Post])
 async def get_posts_by_user(user_id: int | None=None):
     url = f"{domain}posts"
 
@@ -50,5 +58,16 @@ async def get_posts_by_user(user_id: int | None=None):
 
     async with httpx.AsyncClient() as client:
         response = await client.get(url, params=query_params)
+
+        return response.json()
+
+
+# Add Post
+@app.post("/posts", response_model=Post)
+async def create_post(new_post: Post):
+    url = f"{domain}posts"
+
+    async with httpx.AsyncClient() as client:
+        # response = await client.post(url, json=new_post.model_dump())
 
         return response.json()
